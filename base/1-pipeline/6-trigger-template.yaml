@@ -1,0 +1,41 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-template
+spec:
+  params:
+    - name: GIT_URL
+    - name: GIT_BRANCH
+    - name: IMAGE_NAME
+    - name: APP_NAME
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1
+    kind: PipelineRun
+    metadata:
+      generateName: pipeline-run-$(tt.params.APP_NAME)-
+    spec:
+      params:
+        - name: GIT_URL
+          value: $(tt.params.GIT_URL)
+        - name: GIT_BRANCH
+          value: $(tt.params.GIT_BRANCH)
+        - name: IMAGE_NAME
+          value: $(tt.params.IMAGE_NAME)
+        - name: APP_NAME
+          value: $(tt.params.APP_NAME)
+      pipelineRef:
+        name: pipeline
+      taskRunTemplate:
+        serviceAccountName: pipeline
+      timeouts:
+        pipeline: 1h0m0s
+      workspaces:
+        - name: workspace
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+              volumeMode: Filesystem

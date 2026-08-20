@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backoffice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backoffice
+  template:
+    metadata:
+      labels:
+        app: backoffice
+        version: v1
+    spec:
+      containers:
+        - name: backoffice
+          image: docker.io/andrianrf/backoffice:demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080

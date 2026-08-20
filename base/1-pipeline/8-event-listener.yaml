@@ -1,0 +1,40 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: event-listener
+spec:
+  serviceAccountName: pipeline
+  resources:
+    kubernetesResource:
+      spec:
+        template:
+          metadata:
+            labels:
+              app: event-listener
+              version: v1
+  triggers:
+  - bindings:
+    - ref: trigger-binding
+    template:
+      ref: trigger-template
+    interceptors:
+    - params:
+      - name: secretRef
+        value:
+          secretKey: secretToken
+          secretName: webhook-secret
+      - name: eventTypes
+        value:
+        - push
+      ref:
+        kind: ClusterInterceptor
+        name: github
+    - ref:
+        name: "cel"
+      params:
+      - name: "filter"
+        value: "body.ref == 'refs/heads/demo'"
+      - name: overlays
+        value:
+          - key: branch_name
+            expression: "body.ref.split('/')[2]"

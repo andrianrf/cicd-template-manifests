@@ -1,0 +1,75 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: pipeline
+spec:
+  params:
+    - name: GIT_URL
+      default: https://github.com/andrianrf/ocp-cicd-app-html.git
+      type: string
+    - name: GIT_BRANCH
+      default: demo
+      type: string
+    - name: IMAGE_NAME
+      default: docker.io/andrianrf/ocp-cicd-app-html:demo
+      type: string
+    - name: APP_NAME
+      default: ocp-cicd-app-html
+      type: string
+  tasks:
+    - name: fetch-repository
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+      params:
+        - name: URL
+          value: $(params.GIT_URL)
+        - name: REVISION
+          value: $(params.GIT_BRANCH)
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: build-push-image
+      runAfter:
+        - fetch-repository
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: buildah
+          - name: namespace
+            value: openshift-pipelines
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE_NAME)
+        - name: TLS_VERIFY
+          value: "false"
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: deploy
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: openshift-client
+          - name: namespace
+            value: openshift-pipelines
+      params:
+        - name: SCRIPT
+          value: |
+            oc rollout restart deployment $(params.APP_NAME)
+      runAfter:
+        - build-push-image
+  workspaces:
+    - name: workspace

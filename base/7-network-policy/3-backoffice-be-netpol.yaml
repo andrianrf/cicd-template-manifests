@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backoffice-be-netpol
+spec:
+  egress:
+  - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: openshift-dns
+        podSelector:
+          matchLabels:
+            dns.operator.openshift.io/daemonset-dns: default
+    ports:
+      - port: 5353
+        protocol: UDP
+  - ports:
+    - port: 5432
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: payment-gateway
+    - podSelector:
+        matchLabels:
+          app: api-gateway
+    ports:
+    - port: 8089
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: backoffice-be
+  policyTypes:
+  - Ingress
+  - Egress

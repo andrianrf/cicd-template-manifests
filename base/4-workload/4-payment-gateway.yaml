@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-gateway
+  template:
+    metadata:
+      labels:
+        app: payment-gateway
+        version: v1
+    spec:
+      containers:
+        - name: payment-gateway
+          image: docker.io/andrianrf/payment-gateway:demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: dbDdlAuto
+              value: none
+            - name: dbUrl
+              value: jdbc:postgresql://postgres:5432/microidn
+            - name: dbUsername
+              value: root
+            - name: dbPassword
+              value: Root1234!
+            - name: backofficeBeUrl
+              value: http://backoffice-be:8089/backoffice-be
+            - name: appPgaQrisActive
+              value: simulator
+            - name: appPgaQrisFeePercent
+              value: "0.7"
+            - name: appPgaVaActive
+              value: simulator
+            - name: appPgaVaFeeAmount
+              value: "4440"
+            - name: appPgaTransfer
+              value: simulator
+            - name: appFeeInquiry
+              value: "250"
+            - name: appFeeInquiryExternal
+              value: "222"
+            - name: appFeeTransfer
+              value: "6500"
+            - name: appFeeTransferExternal
+              value: "5376"
+            - name: appPgaSettlementDay
+              value: "3"

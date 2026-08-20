@@ -1,0 +1,14 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: trigger-binding
+spec:
+  params:
+    - name: GIT_URL
+      value: $(body.repository.clone_url)
+    - name: GIT_BRANCH
+      value: $(extensions.branch_name)
+    - name: IMAGE_NAME
+      value: "docker.io/andrianrf/$(body.repository.name):$(extensions.branch_name)"
+    - name: APP_NAME
+      value: $(body.repository.name)

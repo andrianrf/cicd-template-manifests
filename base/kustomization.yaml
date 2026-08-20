@@ -1,0 +1,8 @@
+resources:
+- 1-pipeline
+- 2-configmap
+- 3-pvc
+- 4-workload
+- 5-service
+- 6-route
+- 7-network-policy

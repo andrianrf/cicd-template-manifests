@@ -1,0 +1,9 @@
+resources:
+- 1-postgres.yaml
+- 2-pgadmin.yaml
+- 3-backoffice-be.yaml
+- 4-payment-gateway.yaml
+- 5-api-gateway.yaml
+- 6-backoffice.yaml
+- 7-ui.yaml
+- 8-k6.yaml

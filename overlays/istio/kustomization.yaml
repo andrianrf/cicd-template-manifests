@@ -1,0 +1,8 @@
+resources:
+- ../../base
+- 1-pod-monitor.yaml
+- 2-istio-ingress.yaml
+- 3-route.yaml
+- 4-gateway.yaml
+- 5-virtual-service.yaml
+- 6-network-policy.yaml

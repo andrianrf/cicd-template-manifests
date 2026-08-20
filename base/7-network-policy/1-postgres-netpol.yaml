@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-netpol
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backoffice-be
+    ports:
+    - port: 5432
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: payment-gateway
+    ports:
+    - port: 5432
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: pgadmin
+    ports:
+    - port: 5432
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  - Egress

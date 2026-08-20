@@ -1,0 +1,46 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: el-event-listener-netpol
+spec:
+  podSelector:
+    matchLabels:
+      eventlistener: event-listener
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8080
+      from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-ingress
+          podSelector:
+            matchLabels:
+              ingresscontroller.operator.openshift.io/deployment-ingresscontroller: default
+  egress:
+    - ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 6443
+        - protocol: TCP
+          port: 8443
+      to:
+        - ipBlock:
+            cidr: 172.30.0.0/16
+        - ipBlock:
+            cidr: 10.128.0.0/14
+        - ipBlock:
+            cidr: 10.0.0.0/16
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: default
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-pipelines
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: tekton-triggers-core-interceptors
+  policyTypes:
+    - Ingress
+    - Egress

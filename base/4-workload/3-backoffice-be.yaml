@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backoffice-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backoffice-be
+  template:
+    metadata:
+      labels:
+        app: backoffice-be
+        version: v1
+    spec:
+      containers:
+        - name: backoffice-be
+          image: docker.io/andrianrf/backoffice-be:demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8089
+          env:
+            - name: dbDdlAuto
+              value: none
+            - name: dbSeedData
+              value: "false"
+            - name: dbUrl
+              value: jdbc:postgresql://postgres:5432/microidn
+            - name: dbUsername
+              value: root
+            - name: dbPassword
+              value: Root1234!
+            - name: jwtSecret
+              value: VHKJMNnbfhbsjkdbVJHVkhbJBKJBdemonstrationFYVHJbkjnjnsjdnlkfn
+            - name: maxPoolSize
+              value: "10"
+            - name: minPoolIdle
+              value: "1"
+            - name: poolIdleTimeout
+              value: "60000"
+            - name: poolMaxLifetime
+              value: "1800000"
+            - name: dbConnectionTimeout
+              value: "30000"

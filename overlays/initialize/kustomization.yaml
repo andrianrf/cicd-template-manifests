@@ -1,0 +1,6 @@
+resources:
+- ../../base
+
+patches:
+- path: 5-deployment/3-backoffice-be.yaml
+- path: 5-deployment/4-payment-gateway.yaml

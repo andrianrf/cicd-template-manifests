@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-in-namespace
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-ingress
+      podSelector:
+        matchLabels:
+          ingresscontroller.operator.openshift.io/deployment-ingresscontroller: default
+  - from:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+  egress:
+  - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: openshift-dns
+        podSelector:
+          matchLabels:
+            dns.operator.openshift.io/daemonset-dns: default
+    ports:
+      - port: 5353
+        protocol: UDP
+  - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0

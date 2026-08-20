@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+        version: v1
+    spec:
+      containers:
+        - name: ui
+          image: registry.access.redhat.com/ubi9/nginx-124:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: ui-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          command: ["/bin/sh", "-c"]
+          args:
+            - nginx -g "daemon off;"
+          ports:
+            - containerPort: 8080
+      volumes:
+        - name: ui-config
+          configMap:
+            name: ui-config

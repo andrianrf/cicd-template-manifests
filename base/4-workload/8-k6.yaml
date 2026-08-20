@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: k6
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k6
+  template:
+    metadata:
+      labels:
+        app: k6
+        version: v1
+    spec:
+      containers:
+        - name: k6
+          image: docker.io/grafana/k6:latest
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "to run perf test: k6 run --linger /scripts/login.js";
+              sleep infinity;
+          env:
+            - name: K6_WEB_DASHBOARD
+              value: "true"
+            - name: K6_WEB_DASHBOARD_HOST
+              value: "0.0.0.0"
+            - name: K6_WEB_DASHBOARD_PORT
+              value: "5665"
+          ports:
+            - containerPort: 5665
+          volumeMounts:
+            - name: script
+              mountPath: /scripts
+      volumes:
+        - name: script
+          configMap:
+            name: k6-script

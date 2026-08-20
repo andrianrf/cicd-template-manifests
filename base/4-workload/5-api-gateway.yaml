@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+        version: v1
+    spec:
+      containers:
+        - name: api-gateway
+          image: docker.io/andrianrf/api-gateway:demo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: authEnabled
+              value: "true"
+            - name: authJwtSecret
+              value: VHKJMNnbfhbsjkdbVJHVkhbJBKJBdemonstrationFYVHJbkjnjnsjdnlkfn
+            - name: backofficeBeUri
+              value: http://backoffice-be:8089
+            - name: paymentGatewayUri
+              value: http://payment-gateway:8081

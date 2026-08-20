@@ -1,0 +1,4 @@
+resources:
+- 1-postgres-config.yaml
+- 2-ui-config.yaml
+- 3-k6-script.yaml

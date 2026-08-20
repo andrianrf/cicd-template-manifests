@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k6-script
+data:
+  login.js: |
+    import http from 'k6/http';
+    import { sleep, check } from 'k6';
+
+    export const options = {
+      vus: 100,
+      duration: '60s',
+    };
+
+    const url = 'http://api-gateway:8080/backoffice-be/api/auth/signin';
+
+    const payload = JSON.stringify({
+      email: 'admin@microidn.com',
+      password: 'S6uQtzfPs993kr93Hnen2w==',
+      captchaId: '$2a$10$RTcvRGSyVzVlDpmTyWrv8.ptsUvSmpRnN5TXRnmaxdYsXuuI9Wq7W',
+      captcha: '0a72'
+    });
+
+    const params = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: '600s',
+    };
+
+    export default function () {
+      let response = http.post(url, payload, params);
+
+      check(response, {
+        'is status 200': (r) => r.status === 200,
+      });
+
+      sleep(1);
+    }

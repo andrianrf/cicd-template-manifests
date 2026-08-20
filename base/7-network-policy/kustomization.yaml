@@ -1,0 +1,10 @@
+resources:
+- 0-default-deny-in-namespace.yaml
+- 1-postgres-netpol.yaml
+- 2-pgadmin-netpol.yaml
+- 3-backoffice-be-netpol.yaml
+- 4-payment-gateway-netpol.yaml
+- 5-api-gateway-netpol.yaml
+- 6-backoffice-netpol.yaml
+- 7-ui-netpol.yaml
+- 8-k6-netpol.yaml

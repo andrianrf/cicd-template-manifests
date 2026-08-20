@@ -1,0 +1,4 @@
+resources:
+- 1-pgadmin.yaml
+- 2-ui.yaml
+- 3-k6.yaml

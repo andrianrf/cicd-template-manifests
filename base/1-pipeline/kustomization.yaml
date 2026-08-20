@@ -1,0 +1,12 @@
+resources:
+- 1-secret-github-creds.yaml
+- 2-secret-docker-creds.yaml
+- 3-sa-pipeline.yaml
+- 4-pipeline.yaml
+- 5-trigger-binding.yaml
+- 6-trigger-template.yaml
+- 7-webhook-secret.yaml
+- 8-event-listener.yaml
+- 9-route.yaml
+- 10-pipeline-netpol.yaml
+- 11-el-event-listener-netpol.yaml

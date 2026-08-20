@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: el-pipeline
+spec:
+  to:
+    name: el-event-listener
+    weight: 100
+    kind: Service
+  tls:
+    insecureEdgeTerminationPolicy: Allow
+    termination: edge
+  port:
+    targetPort: http-listener
